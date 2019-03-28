@@ -1,0 +1,20 @@
+class Test {
+  testList () {
+    return [
+      {
+        header: 'test1',
+        width: 140
+      },
+      {
+        header: 'test2',
+        width: 250
+      }
+    ]
+  }
+
+  getList () {
+    return _.map(this.testList(), (entity) => entity.width)
+  }
+}
+
+export default new Test()
