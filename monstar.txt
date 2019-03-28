@@ -1,0 +1,88 @@
+# -*- coding: utf-8 -*-
+"""
+Spyderエディタ
+
+これは一時的なスクリプトファイルです
+"""
+import pandas as pd
+import numpy as np
+from sklearn import tree
+
+pd.set_option("display.max_rows", 101)
+pd.set_option("display.max_colwidth", 80)
+ 
+train = pd.read_csv("C:/Users/z2J1193/Desktop/ttt/train.csv")
+test = pd.read_csv("C:/Users/z2J1193/Desktop/ttt/test.csv")
+
+train.head()
+test.head()
+
+test_shape = test.shape
+train_shape = train.shape
+print(test_shape)
+print(train_shape)
+
+
+test.describe()
+train.describe()
+
+
+test["color"][test["color"] == "black"] = 1
+test["color"][test["color"] == "blood"] = 2
+test["color"][test["color"] == "blue"] = 3
+test["color"][test["color"] == "clear"] = 4
+test["color"][test["color"] == "green"] = 5
+test["color"][test["color"] == "white"] = 6
+test["rotting_flesh"][test["rotting_flesh"] < test["hair_length"]] = 10
+
+
+
+train["color"][train["color"] == "black"] = 1
+train["color"][train["color"] == "blood"] = 2
+train["color"][train["color"] == "blue"] = 3
+train["color"][train["color"] == "clear"] = 4
+train["color"][train["color"] == "green"] = 5
+train["color"][train["color"] == "white"] = 6
+train["rotting_flesh"][train["rotting_flesh"] < train["hair_length"]] = 10
+
+
+# 「train」の目的変数と説明変数の値を取得
+target = train["type"].values
+features_one = train[["bone_length", "rotting_flesh", "hair_length", "has_soul", "color"]].values
+ 
+# 決定木の作成
+my_tree_one = tree.DecisionTreeClassifier()
+my_tree_one = my_tree_one.fit(features_one, target)
+ 
+# 「test」の説明変数の値を取得
+test_features = test[["bone_length", "rotting_flesh", "hair_length", "has_soul", "color"]].values
+ 
+# 「test」の説明変数を使って「my_tree_one」のモデルで予測
+my_prediction = my_tree_one.predict(test_features)
+
+
+
+
+# 予測データのサイズを確認
+my_prediction.shape
+
+
+#予測データの中身を確認
+print(my_prediction)
+
+# PassengerIdを取得
+PassengerId = np.array(test["id"]).astype(int)
+ 
+# my_prediction(予測データ）とPassengerIdをデータフレームへ落とし込む
+my_solution = pd.DataFrame(my_prediction, PassengerId, columns = ["type"])
+ 
+# my_tree_one.csvとして書き出し
+my_solution.to_csv("C:/Users/z2J1193/Desktop/ttt/my_tree_one.csv", index_label = ["id"])
+
+
+
+
+
+ 
+  
+
